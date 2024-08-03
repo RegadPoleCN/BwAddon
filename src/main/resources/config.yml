@@ -1,0 +1,7 @@
+runCommandWhenGameStart: "list"
+
+runCommandWhenGameEnd: "list"
+
+giveResourceWhenPlayerKillInGame: "nether_star"
+
+giveAnotherPlayerWhenPickRes: 1.0

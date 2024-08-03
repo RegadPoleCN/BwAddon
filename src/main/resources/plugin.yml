@@ -1,0 +1,12 @@
+name: BwAddon
+version: '${project.version}'
+main: me.regadpole.bwaddon.BwAddon
+api-version: '1.13'
+depend: [ BedWars ]
+commands:
+  bwaddon:
+    aliases: [bwa, BwAddon]
+    description: BwAddon基本命令.
+    usage: /<command>
+    permission: bwaddon.command
+    permission-message: 你不能执行它.
