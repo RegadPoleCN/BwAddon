@@ -7,11 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.screamingsandals.bedwars.api.events.BedwarsGameEndEvent;
 import org.screamingsandals.bedwars.api.events.BedwarsGameStartEvent;
+import org.screamingsandals.bedwars.api.events.BedwarsPlayerDeathMessageSendEvent;
 import org.screamingsandals.bedwars.api.events.BedwarsPlayerKilledEvent;
 
 import java.util.ArrayList;
@@ -30,13 +32,33 @@ public class ServerListeners implements Listener {
         Bukkit.getConsoleSender().sendMessage("Run command "+Configurator.Config.runCommandWhenGameEnd+" in game "+event.getGame().getName()+" when game end.");
     }
 
+//    /**
+//     * For 1.13~1.20.6 version
+//     *
+//     * @param event
+//     */
+//    @EventHandler
+//    public void onPlayerKillInGame(BedwarsPlayerKilledEvent event) {
+//        Player killer = event.getKiller();
+//        if (killer != null){
+//            killer.getInventory().addItem(BwUtils.getResourceItem(Configurator.Config.giveResourceWhenPlayerKillInGame));
+//            Bukkit.getConsoleSender().sendMessage("Give killer "+killer.getName()+"a"+Configurator.Config.giveResourceWhenPlayerKillInGame+" in game "+event.getGame().getName()+".");
+//        }
+//    }
+
     @EventHandler
-    public void onPlayerKillInGame(BedwarsPlayerKilledEvent event) {
-        Player killer = event.getKiller();
-        if (killer != null){
-            killer.getInventory().addItem(BwUtils.getResourceItem(Configurator.Config.giveResourceWhenPlayerKillInGame));
-            Bukkit.getConsoleSender().sendMessage("Give killer "+killer.getName()+"a"+Configurator.Config.giveResourceWhenPlayerKillInGame+" in game "+event.getGame().getName()+".");
-        }
+    public void onPlayerDeathInGame(PlayerDeathEvent event) {
+        final var player = event.getEntity();
+        final var damageSource = event.getDamageSource();
+        if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
+
+        final var causingEntity = damageSource.getCausingEntity();
+        if (!(causingEntity instanceof Player causingPlayer)) return;
+        if (!BwAddon.api.isPlayerPlayingAnyGame(causingPlayer)) return;
+        if (!BwAddon.api.getGameOfPlayer(player).getConnectedPlayers().contains(causingPlayer)) return;
+
+        causingPlayer.getInventory().addItem(BwUtils.getResourceItem(Configurator.Config.giveResourceWhenPlayerKillInGame));
+        Bukkit.getConsoleSender().sendMessage("Give killer "+causingPlayer.getName()+"a"+Configurator.Config.giveResourceWhenPlayerKillInGame+" in game "+BwAddon.api.getGameOfPlayer(causingPlayer)+".");
     }
 
     @EventHandler
