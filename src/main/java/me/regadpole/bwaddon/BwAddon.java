@@ -1,15 +1,8 @@
 package me.regadpole.bwaddon;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.BoundingBox;
 import org.screamingsandals.bedwars.api.BedwarsAPI;
-import org.screamingsandals.bedwars.api.game.ItemSpawner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class BwAddon extends JavaPlugin {
 

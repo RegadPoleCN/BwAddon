@@ -1,7 +1,7 @@
 name: BwAddon
 version: '${project.version}'
 main: me.regadpole.bwaddon.BwAddon
-api-version: '1.13'
+api-version: '1.20.5'
 depend: [ BedWars ]
 commands:
   bwaddon:
