@@ -10,6 +10,7 @@ public class Configurator {
         Config.runCommandWhenGameEnd = config.getString("runCommandWhenGameEnd");
         Config.giveResourceWhenPlayerKillInGame = config.getString("giveResourceWhenPlayerKillInGame");
         Config.giveAnotherPlayerWhenPickRes = config.getDouble("giveAnotherPlayerWhenPickRes");
+        Config.resShare = config.getBoolean("resShare");
     }
 
     public static class Config {
@@ -17,5 +18,6 @@ public class Configurator {
         public static String runCommandWhenGameEnd;
         public static String giveResourceWhenPlayerKillInGame;
         public static double giveAnotherPlayerWhenPickRes;
+        public static boolean resShare;
     }
 }

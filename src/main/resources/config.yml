@@ -5,3 +5,4 @@ runCommandWhenGameEnd: "list"
 giveResourceWhenPlayerKillInGame: "nether_star"
 
 giveAnotherPlayerWhenPickRes: 1.0
+resShare: true

@@ -41,6 +41,7 @@ public class ServerListeners implements Listener {
 
     @EventHandler
     public void onPlayerPickRes(EntityPickupItemEvent event) {
+        if (!Configurator.Config.resShare) return;
         boolean isRes = false;
         Entity entity = event.getEntity();
         if (!(entity instanceof Player player)) {
