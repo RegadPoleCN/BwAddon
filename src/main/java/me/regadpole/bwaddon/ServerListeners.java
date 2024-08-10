@@ -12,10 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
-import org.screamingsandals.bedwars.api.events.BedwarsGameEndEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsGameStartEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsPlayerDeathMessageSendEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsPlayerKilledEvent;
+import org.screamingsandals.bedwars.api.events.*;
 
 import java.util.ArrayList;
 
@@ -24,13 +21,13 @@ public class ServerListeners implements Listener {
     @EventHandler
     public void onGameStart(BedwarsGameStartEvent event) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Configurator.Config.runCommandWhenGameStart);
-        Bukkit.getConsoleSender().sendMessage("Run command "+Configurator.Config.runCommandWhenGameStart+" in game "+event.getGame().getName()+" when game start.");
+        Bukkit.getConsoleSender().sendMessage("Run command " + Configurator.Config.runCommandWhenGameStart + " in game " + event.getGame().getName() + " when game start.");
     }
 
     @EventHandler
     public void onGameEnd(BedwarsGameEndEvent event) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Configurator.Config.runCommandWhenGameEnd);
-        Bukkit.getConsoleSender().sendMessage("Run command "+Configurator.Config.runCommandWhenGameEnd+" in game "+event.getGame().getName()+" when game end.");
+        Bukkit.getConsoleSender().sendMessage("Run command " + Configurator.Config.runCommandWhenGameEnd + " in game " + event.getGame().getName() + " when game end.");
     }
 
 //    /**
@@ -59,7 +56,7 @@ public class ServerListeners implements Listener {
         if (!BwAddon.api.getGameOfPlayer(player).getConnectedPlayers().contains(causingPlayer)) return;
 
         causingPlayer.getInventory().addItem(BwUtils.getResourceItem(Configurator.Config.giveResourceWhenPlayerKillInGame));
-        Bukkit.getConsoleSender().sendMessage("Give killer "+causingPlayer.getName()+"a"+Configurator.Config.giveResourceWhenPlayerKillInGame+" in game "+BwAddon.api.getGameOfPlayer(causingPlayer)+".");
+        Bukkit.getConsoleSender().sendMessage("Give killer " + causingPlayer.getName() + "a" + Configurator.Config.giveResourceWhenPlayerKillInGame + " in game " + BwAddon.api.getGameOfPlayer(causingPlayer) + ".");
     }
 
     @EventHandler
@@ -74,7 +71,7 @@ public class ServerListeners implements Listener {
 
         ItemStack itemStack = event.getItem().getItemStack();
         int pickAmount = itemStack.getAmount();
-        double giveAmount = pickAmount*Configurator.Config.giveAnotherPlayerWhenPickRes;
+        double giveAmount = pickAmount * Configurator.Config.giveAnotherPlayerWhenPickRes;
         itemStack.setAmount((int) Math.round(giveAmount));
 
         for (ItemStack stack : BwUtils.getResourceHome(player)) {
@@ -88,7 +85,7 @@ public class ServerListeners implements Listener {
 
         var boundingBoxes = BwUtils.getSpawnerBoundingBoxes(player);
         for (BoundingBox boundingBox : boundingBoxes) {
-            if(boundingBox.contains(playerLocation.getX(), playerLocation.getY(), playerLocation.getZ())) {
+            if (boundingBox.contains(playerLocation.getX(), playerLocation.getY(), playerLocation.getZ())) {
                 var entities = player.getWorld().getNearbyEntities(boundingBox);
                 for (Entity entityNearBy : entities) {
                     if (entityNearBy instanceof Player playerNearBy) {
@@ -117,6 +114,18 @@ public class ServerListeners implements Listener {
                 if (!item.getItemMeta().isUnbreakable()) item.getItemMeta().setUnbreakable(true);
                 player.getInventory().setItem(index, item);
             });
+        }
+    }
+
+    @EventHandler
+    public void onApplyProperty(BedwarsApplyPropertyToItem event) {
+        final var stack = event.getStack();
+        final var player = event.getPlayer();
+        if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
+
+        for (Material material : BwUtils.unbreakableEqu) {
+            if (stack.getType() != material) return;
+            if (!stack.getItemMeta().isUnbreakable()) stack.getItemMeta().setUnbreakable(true);
         }
     }
 }
