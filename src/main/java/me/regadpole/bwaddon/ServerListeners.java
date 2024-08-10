@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -99,7 +100,7 @@ public class ServerListeners implements Listener {
         target.forEach(targetP -> targetP.getInventory().addItem(itemStack));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onInventory(InventoryEvent event) {
         final var inv = event.getInventory();
         if (!(inv.getHolder() instanceof Player player)) return;
