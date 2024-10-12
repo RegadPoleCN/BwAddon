@@ -1,7 +1,6 @@
 package me.regadpole.bwaddon;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,7 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 import org.screamingsandals.bedwars.api.events.*;
@@ -97,35 +96,47 @@ public class ServerListeners implements Listener {
         target.forEach(targetP -> targetP.getInventory().addItem(itemStack));
     }
 
+//    @EventHandler(priority = EventPriority.MONITOR)
+//    public void onInventory(InventoryEvent event) {
+//        final var inv = event.getInventory();
+//        if (!(inv.getHolder() instanceof Player player)) return;
+//        if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
+//
+//        var armorCon = player.getInventory().getArmorContents();
+//        for (ItemStack content : armorCon) {
+//            if (!content.getItemMeta().isUnbreakable()) content.getItemMeta().setUnbreakable(true);
+//        }
+//        player.getInventory().setArmorContents(armorCon);
+//        for (Material material : BwUtils.unbreakableEqu) {
+//            var contents = player.getInventory().all(material);
+//            contents.forEach((index, item) -> {
+//                if (!item.getItemMeta().isUnbreakable()) item.getItemMeta().setUnbreakable(true);
+//                player.getInventory().setItem(index, item);
+//            });
+//        }
+//    }
+//
+//    @EventHandler
+//    public void onApplyProperty(BedwarsApplyPropertyToItem event) {
+//        final var stack = event.getStack();
+//        final var player = event.getPlayer();
+//        if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
+//
+//        for (Material material : BwUtils.unbreakableEqu) {
+//            if (stack.getType() != material) return;
+//            if (!stack.getItemMeta().isUnbreakable()) stack.getItemMeta().setUnbreakable(true);
+//        }
+//    }
+
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onInventory(InventoryEvent event) {
-        final var inv = event.getInventory();
-        if (!(inv.getHolder() instanceof Player player)) return;
-        if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
-
-        var armorCon = player.getInventory().getArmorContents();
-        for (ItemStack content : armorCon) {
-            if (!content.getItemMeta().isUnbreakable()) content.getItemMeta().setUnbreakable(true);
-        }
-        player.getInventory().setArmorContents(armorCon);
-        for (Material material : BwUtils.unbreakableEqu) {
-            var contents = player.getInventory().all(material);
-            contents.forEach((index, item) -> {
-                if (!item.getItemMeta().isUnbreakable()) item.getItemMeta().setUnbreakable(true);
-                player.getInventory().setItem(index, item);
-            });
-        }
-    }
-
-    @EventHandler
-    public void onApplyProperty(BedwarsApplyPropertyToItem event) {
-        final var stack = event.getStack();
+    public void onItemDamage(PlayerItemDamageEvent event) {
         final var player = event.getPlayer();
         if (!BwAddon.api.isPlayerPlayingAnyGame(player)) return;
 
-        for (Material material : BwUtils.unbreakableEqu) {
-            if (stack.getType() != material) return;
-            if (!stack.getItemMeta().isUnbreakable()) stack.getItemMeta().setUnbreakable(true);
+        if (BwUtils.unbreakableEqu.contains(event.getItem().getType())) {
+            event.setDamage(0);
+            event.setCancelled(true);
         }
+
     }
 }
