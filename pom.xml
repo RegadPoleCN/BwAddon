@@ -6,7 +6,7 @@
 
   <groupId>me.regadpole</groupId>
   <artifactId>BwAddon</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>BwAddon</name>
